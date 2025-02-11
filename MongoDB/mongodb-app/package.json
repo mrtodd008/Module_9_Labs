@@ -1,0 +1,26 @@
+{
+  "name": "module_9_labs",
+  "version": "1.0.0",
+  "description": "Module 9 Labs",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js",
+    "dev": "nodemon server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mrtodd008/Module_9_Labs.git"
+  },
+  "author": "Julian Todd",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/mrtodd008/Module_9_Labs/issues"
+  },
+  "homepage": "https://github.com/mrtodd008/Module_9_Labs#readme",
+  "dependencies": {
+    "dotenv": "^16.4.7",
+    "express": "^0.0.5",
+    "mongoose": "^8.9.5"
+  }
+}

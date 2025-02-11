@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Chat App</title>
+    <script src="/socket.io/socket.io.js"></script>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+      }
+      #chat {
+        height: 300px;
+        overflow-y: scroll;
+        border: 1px solid #ccc;
+        padding: 10px;
+      }
+      #users {
+        margin-top: 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <h2>Chat App</h2>
+    <div id="chat"></div>
+    <input id="nickname" type="text" placeholder="Enter your nickname" />
+    <button onclick="setNickname()">Set Nickname</button>
+    <br />
+    <input
+      id="message"
+      type="text"
+      placeholder="Type a message..."
+      onkeypress="sendTyping()"
+    />
+    <button onclick="sendMessage()">Send</button>
+    <p id="typing"></p>
+    <h3>Online Users</h3>
+    <ul id="users"></ul>
+
+    <script>
+      const socket = io();
+      let nickname = "";
+
+      function setNickname() {
+        nickname = document.getElementById("nickname").value;
+        if (nickname) {
+          socket.emit("setNickname", nickname);
+          document.getElementById("nickname").style.display = "none";
+        }
+      }
+
+      function sendMessage() {
+        const message = document.getElementById("message").value;
+        if (message) {
+          document.getElementById(
+            "chat"
+          ).innerHTML += `<p><strong>You:</strong> ${message}</p>`;
+          socket.emit("chatMessage", message);
+          document.getElementById("message").value = "";
+        }
+      }
+
+      function sendTyping() {
+        socket.emit("typing", nickname);
+      }
+
+      socket.on("message", (msg) => {
+        document.getElementById("chat").innerHTML += `<p>${msg}</p>`;
+      });
+
+      socket.on("updateUsers", (userList) => {
+        document.getElementById("users").innerHTML = userList
+          .map((user) => `<li>${user}</li>`)
+          .join("");
+      });
+
+      socket.on("typing", (user) => {
+        document.getElementById("typing").innerText = `${user} is typing...`;
+        setTimeout(() => {
+          document.getElementById("typing").innerText = "";
+        }, 2000);
+      });
+    </script>
+  </body>
+</html>
